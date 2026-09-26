@@ -1,0 +1,22 @@
+services:
+  ws-server:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    ports:
+      - "8080:8080"
+
+  ws-client:
+    build:
+      context: .
+      dockerfile: ws-client/Dockerfile
+    depends_on:
+      - ws-server
+
+# Add infra dependencies (redis, kafka, postgres, ...) here as extra services
+# once ws-server/ws-client actually need one, e.g.:
+#
+#   redis:
+#     image: redis:7-alpine
+#     ports:
+#       - "6379:6379"
