@@ -1,22 +1,208 @@
 services:
-  ws-server:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  ws-server-1:
     build:
       context: .
       dockerfile: ws-server/Dockerfile
-    ports:
-      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-1
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
 
-  ws-client:
+  ws-server-2:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-2
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-3:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-3
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-4:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-4
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-5:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-5
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-6:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-6
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-7:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-7
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-8:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-8
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-9:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-9
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  ws-server-10:
+    build:
+      context: .
+      dockerfile: ws-server/Dockerfile
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_ID=ws-server-10
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - ws-server-1
+      - ws-server-2
+      - ws-server-3
+      - ws-server-4
+      - ws-server-5
+      - ws-server-6
+      - ws-server-7
+      - ws-server-8
+      - ws-server-9
+      - ws-server-10
+
+  ws-client-1:
     build:
       context: .
       dockerfile: ws-client/Dockerfile
+    environment:
+      - WS_SERVER_URL=ws://ws-server-1:8080/ws
+      - CLIENT_ID=client-1
     depends_on:
-      - ws-server
+      - ws-server-1
 
-# Add infra dependencies (redis, kafka, postgres, ...) here as extra services
-# once ws-server/ws-client actually need one, e.g.:
-#
-#   redis:
-#     image: redis:7-alpine
-#     ports:
-#       - "6379:6379"
+  ws-client-2:
+    build:
+      context: .
+      dockerfile: ws-client/Dockerfile
+    environment:
+      - WS_SERVER_URL=ws://ws-server-1:8080/ws
+      - CLIENT_ID=client-2
+    depends_on:
+      - ws-server-1
+
+  ws-client-3:
+    build:
+      context: .
+      dockerfile: ws-client/Dockerfile
+    environment:
+      - WS_SERVER_URL=ws://ws-server-2:8080/ws
+      - CLIENT_ID=client-3
+    depends_on:
+      - ws-server-2
+
+  ws-client-4:
+    build:
+      context: .
+      dockerfile: ws-client/Dockerfile
+    environment:
+      - WS_SERVER_URL=ws://ws-server-2:8080/ws
+      - CLIENT_ID=client-4
+    depends_on:
+      - ws-server-2
+
+  ws-client-5:
+    build:
+      context: .
+      dockerfile: ws-client/Dockerfile
+    environment:
+      - WS_SERVER_URL=ws://ws-server-2:8080/ws
+      - CLIENT_ID=client-5
+    depends_on:
+      - ws-server-2
