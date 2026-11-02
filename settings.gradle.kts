@@ -1,3 +1,3 @@
 rootProject.name = "websocket-lab"
 
-include("ws-server", "ws-client")
+include("ws-server", "ws-client", "load-test")
